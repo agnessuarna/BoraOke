@@ -1,4 +1,5 @@
 ﻿using System;
+using MySql.Data.MySqlClient;
 
 namespace BoraOke
 {
@@ -6,12 +7,50 @@ namespace BoraOke
     {
         private int Boyband;
         private int lama_peminjam;
-        static DateTime deadline;
+        private DateTime _deadline;
         private static bool pinjam = false;
+        private string namaAlbum;
+        private DateTime Tglmeminjam;
 
+        public string NamaAlbum
+        {
+            get { return namaAlbum; }
+            set { namaAlbum = value; }
+        }
+        
+        public DateTime deadline
+        {
+            get { return _deadline; }
+            set { _deadline = value; }
+        }
+
+        public DateTime tglmeminjam
+        {
+            get { return Tglmeminjam; }
+            set { Tglmeminjam = value; }
+        }
+        public int _LamaPeminjaman
+        {
+            get { return lama_peminjam; }
+            set { lama_peminjam = value; }
+        }
+
+        public void insert()
+        {
+            DataMember dataMember = new DataMember();
+            Connect data = new Connect();
+            data.Connection.Open();
+            MySqlCommand command = new MySqlCommand("Insert into peminjaman(tanggal_peminjaman, lama_peminjaman, nama_peminjam, album_peminjam,  tanggal_pengembalian)  Values( '" + tglmeminjam + "', '" + _LamaPeminjaman + "','" + dataMember.NamaMember + "', '" + NamaAlbum + "',  '" + deadline + "')", data.Connection);
+            int i = command.ExecuteNonQuery();
+            if (i > 0)
+            {
+                Console.WriteLine("\n==Data Peminjaman telah diubah==");
+            }
+        }
 
         public void tanggalmeminjam()
         {
+
             Console.WriteLine("\n-----Tanggal Peminjaman-----\n");
             Console.Write("Tanggal  \t\t : ");
             int day = int.Parse(Console.ReadLine());
@@ -22,7 +61,7 @@ namespace BoraOke
 
             DateTime aDate = new DateTime(year, month, day);
             Console.Write("\ntanggal Peminjaman \t: ");
-            Console.WriteLine(aDate.ToString("dd MMMM yyyy"));
+            Console.WriteLine(aDate.ToString("dd MM yyyy"));
 
             Console.WriteLine("\n====== Lama Peminjaman =====");
             Console.WriteLine("pilih lama peminjaman \n (3) \t(5) \t(7)");
@@ -51,6 +90,8 @@ namespace BoraOke
             }
             else
                 Console.WriteLine("\nDenda");
+
+
 
         }
 

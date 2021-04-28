@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace BoraOke
 {
@@ -10,34 +11,76 @@ namespace BoraOke
     {
         public override void Search()
         {
-            Console.WriteLine("========== Masukkan Judul Album ========== ");
-
-            int Judul = 0;
-
-            Console.WriteLine("(1) Ice Cream Cake");
-            Console.WriteLine("(2) Russian Roulette");
-            Console.WriteLine("(3) The ReVe Festival Finale");
-            Judul = Convert.ToInt32(Console.ReadLine());
-
-
-            switch (Judul)
+            Console.WriteLine("========== Judul Album =========== ");
+            Connect data = new Connect();
+            using (data.Connection)
             {
-                case 1:
-                    Console.WriteLine("\n\tAlbum Ice Cream Cake");
-                    Console.WriteLine("Realese Date : September 9, 2015");
-                    Console.WriteLine("Track List   : 6 Song");
-                    break;
-                case 2:
-                    Console.WriteLine("\n\tAlbum Russian Roulette");
-                    Console.WriteLine("Realese Date : September 7, 2016");
-                    Console.WriteLine("Track List   : 7 Song");
-                    break;
-                case 3:
-                    Console.WriteLine("\n\tAlbum The ReVe Festival Finale");
-                    Console.WriteLine("Realese Date : December 23, 2019");
-                    Console.WriteLine("Track List   : 16 Song");
-                    break;
+                try
+                {
+
+                    MySqlCommand command = data.Connection.CreateCommand();
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.CommandText = "Select * from redvelvetalbum";
+
+
+                    MySqlDataReader reader = command.ExecuteReader();
+
+                    var data1 = "ID \t    Judul Album \n";
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            data1 += reader.GetInt32(0) + "\t\t" + reader.GetString(1) + "\t\t" + Environment.NewLine;
+                        }
+                        Console.WriteLine(data1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("===Album tidak Ada===");
+                    }
+                    reader.Close();
+
+                    Console.WriteLine("-------------------------------------------------------");
+                    int ID = 0;
+                    Console.Write(" Masukkan ID Album yang akan dipinjam  :  ");
+                    ID = Convert.ToInt32(Console.ReadLine());
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.CommandText = "Select * from redvelvetalbum where id_Album in (" + ID + ")";
+
+                    MySqlDataReader rd = command.ExecuteReader();
+
+                    var data2 = "ID \t      Judul Album \t    Realease Album \t Track List : Song \n";
+
+                    if (rd.HasRows)
+                    {
+                        while (rd.Read())
+                        {
+                            data2 += rd.GetInt32(0) + "\t\t" + rd.GetString(1) + "\t\t" + rd.GetDateTime(2) + "\t\t" + rd.GetInt32(3) + Environment.NewLine;
+                        }
+                        Console.WriteLine(data2);
+                    }
+                    else
+                    {
+                        Console.WriteLine("===Album tidak Ada===");
+                    }
+
+                    reader.Close();
+
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    System.Console.WriteLine("Error : " + ex.Message.ToString());
+                }
+                finally
+                {
+                    Console.WriteLine("==Press any keys==");
+                    Console.ReadKey();
+                }
             }
+
         }
+
     }
 }
+
