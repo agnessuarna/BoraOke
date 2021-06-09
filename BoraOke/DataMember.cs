@@ -34,8 +34,10 @@ namespace BoraOke
             int i = command.ExecuteNonQuery();
             if (i > 0)
             {
-                Console.WriteLine("Data Member telah diperbaharui");
+                Console.WriteLine("\n");
             }
+
+            
           
         }
 

@@ -61,7 +61,7 @@ namespace BoraOke
 
             DateTime aDate = new DateTime(year, month, day);
             Console.Write("\ntanggal Peminjaman \t: ");
-            Console.WriteLine(aDate.ToString("dd MM yyyy"));
+            Console.WriteLine(aDate.ToString("dd MMMM yyyy"));
 
             Console.WriteLine("\n====== Lama Peminjaman =====");
             Console.WriteLine("pilih lama peminjaman \n (3) \t(5) \t(7)");
